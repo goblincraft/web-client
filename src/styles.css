@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    height: 10vh;
+}
+
+.app-content {
+    height: 80vh;
+}
+
+.footer {
+    height: 10vh;
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 10px 0;
+}
