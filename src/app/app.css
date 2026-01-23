@@ -4,15 +4,9 @@
     min-height: 100vh;
 }
 
-.app-content {
-    display: flex;
-    flex-direction: row;
-    height: 80vh;
-}
-
 .menu-toggle {
     width: 10%;
-    padding: 10px;
+    padding: 2%;
 }
 
 .route-outlet {
@@ -21,6 +15,12 @@
 
 .header {
     height: 10vh;
+}
+
+.app-content {
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
 }
 
 .footer {
