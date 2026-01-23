@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -12,5 +12,11 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './menu-toggle.component.css',
 })
 export class MenuToggleComponent {
+
+  @Output() menuToggle = new EventEmitter<void>();
+
+  toggleMenu(): void {
+    this.menuToggle.emit();
+  }
 
 }
