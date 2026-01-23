@@ -18,5 +18,5 @@ import { MenuToggleComponent } from './shell/menu-toggle.component/menu-toggle.c
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('web-client');
+  
 }
