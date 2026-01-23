@@ -1,0 +1,31 @@
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-content {
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
+}
+
+.menu-toggle {
+    width: 10%;
+    padding: 10px;
+}
+
+.route-outlet {
+    width: 90%;
+}
+
+.header {
+    height: 10vh;
+}
+
+.footer {
+    height: 10vh;
+    background-color: var(--primary-color);
+    text-align: center;
+    padding: 10px 0;
+}
