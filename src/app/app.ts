@@ -4,6 +4,7 @@ import { HeaderComponent } from './shell/header/header.component';
 import { FooterComponent } from './shell/footer/footer.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MenuToggleComponent } from './shell/menu-toggle/menu-toggle.component';
+import { SideMenuComponent } from './shell/side-menu/side-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { MenuToggleComponent } from './shell/menu-toggle/menu-toggle.component';
     HeaderComponent,
     FooterComponent,
     MenuToggleComponent,
+    SideMenuComponent,
     MatSidenavModule,
     RouterOutlet
   ],
