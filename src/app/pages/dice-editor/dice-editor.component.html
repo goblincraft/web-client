@@ -4,9 +4,15 @@
     </mat-card-header>
     <mat-card-content class="page-content">
         <form class="dice-settings">
-            <mat-form-field>
+            <mat-form-field id="name-field">
                 <mat-label>Name</mat-label>
                 <input matInput>
+            </mat-form-field>
+            <mat-form-field id="type-field">
+                <mat-label>Type</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let option of options" [value]="option.value">{{ option.label }}</mat-option>
+                </mat-select>
             </mat-form-field>
         </form>
     </mat-card-content>

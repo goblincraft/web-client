@@ -6,7 +6,14 @@ export enum DiceShapes {
     Icosahedron = 3
 }
 
-export const DiceOptions: { label: string; value: string; sides: number; object: number; }[] = [
+export interface IDiceOption {
+    label: string;
+    value: string;
+    sides: number;
+    object: DiceShapes;
+}
+
+export const DiceOptions: IDiceOption[] = [
     { label: 'd4', value: 'd4', sides: 4, object: DiceShapes.Tetrahedron },
     { label: 'd6', value: 'd6', sides: 6, object: DiceShapes.Cube },
     { label: 'd8', value: 'd8', sides: 8, object: DiceShapes.Octahedron },

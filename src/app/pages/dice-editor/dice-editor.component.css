@@ -1,4 +1,14 @@
 .dice-settings {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#name-field {
+    width: 60%;
+}
+
+#type-field {
+    width: 35%;
 }
