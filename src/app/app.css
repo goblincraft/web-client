@@ -17,6 +17,14 @@
     height: 10vh;
 }
 
+.sidenav {
+    width: 200px;
+}
+
+.mat-drawer {
+    border-radius: 0px !important;
+}
+
 .app-content {
     display: flex;
     flex-direction: row;
