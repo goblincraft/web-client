@@ -1,3 +1,8 @@
 <div class="side-menu-wrapper">
-    
+        <div *ngFor="let route of routes">
+            <a class="nav-link" [routerLink]="route.path">
+                <mat-icon>{{ route.icon }}</mat-icon>
+                <span>{{ route.label }}</span>
+            </a>
+        </div>
 </div>
