@@ -1,0 +1,4 @@
+.dice-settings {
+    display: flex;
+    flex-direction: row;
+}
