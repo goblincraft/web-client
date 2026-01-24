@@ -1,4 +1,8 @@
 <div class="side-menu-wrapper">
+        <div class="close-button">
+            <mat-icon (click)="closeMenu()">close</mat-icon>
+        </div>
+        <mat-divider></mat-divider>
         <div *ngFor="let route of routes">
             <a class="nav-link" [routerLink]="route.path">
                 <mat-icon>{{ route.icon }}</mat-icon>

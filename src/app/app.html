@@ -2,11 +2,11 @@
     <app-header class="header"></app-header>
     <mat-drawer-container class="app-drawer" autosize>
         <mat-drawer #drawer class="sidenav" mode="over">
-            <app-side-menu></app-side-menu>
+            <app-side-menu (menuClose)="drawer.toggle()"></app-side-menu>
         </mat-drawer>
         <div class="app-content">
             <div class="menu-toggle">
-                <app-menu-toggle (menuToggle)="drawer.toggle()"></app-menu-toggle>
+                <app-menu-toggle (menuOpen)="drawer.toggle()"></app-menu-toggle>
             </div>
             <div class="route-outlet">
                 <router-outlet />

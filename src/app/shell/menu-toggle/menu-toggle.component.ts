@@ -13,10 +13,10 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class MenuToggleComponent {
 
-  @Output() menuToggle = new EventEmitter<void>();
+  @Output() menuOpen = new EventEmitter<void>();
 
   toggleMenu(): void {
-    this.menuToggle.emit();
+    this.menuOpen.emit();
   }
 
 }
