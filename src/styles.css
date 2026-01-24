@@ -22,3 +22,7 @@ html, body {
 .page-actions {
     justify-content: flex-end;
 }
+
+.page-action {
+    margin-left: 10px;
+}
