@@ -8,3 +8,17 @@ html, body {
     height: 100%;
     font-family: Arial, sans-serif;
 }
+
+.page-title {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.page-content {
+    padding-top: 3% !important;
+    height: 55vh;
+}
+
+.page-actions {
+    justify-content: flex-end;
+}

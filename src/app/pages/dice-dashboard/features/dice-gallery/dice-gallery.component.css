@@ -1,12 +1,2 @@
-mat-card-title {
-    font-size: 1.3em;
-}
 
-.gallery-content {
-    padding-top: 3%;
-    min-height: 65vh;
-}
 
-mat-card-actions {
-    justify-content: end;
-}
