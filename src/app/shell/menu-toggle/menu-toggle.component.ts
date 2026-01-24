@@ -14,12 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 export class MenuToggleComponent {
 
   @Output() menuToggle = new EventEmitter<void>();
-  menuOpened = signal(false);
-  menuIcon = signal('menu'); 
 
   toggleMenu(): void {
-    this.menuOpened.set(!this.menuOpened());
-    this.menuIcon.set(this.menuOpened() ? 'menu_open' : 'menu');
     this.menuToggle.emit();
   }
 
