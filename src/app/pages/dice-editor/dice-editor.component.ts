@@ -4,13 +4,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { DiceOptions, IDiceOption } from '../../cls/dice';
+import { Dice, DiceOptions, IDiceOption } from '../../cls/dice';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dice-editor',
   imports: [
     CommonModule,
+    FormsModule,
     MatInputModule,
     MatSelectModule,
     MatCardModule,
@@ -23,5 +25,6 @@ import { CommonModule } from '@angular/common';
 export class DiceEditorComponent {
 
   options: IDiceOption[] = DiceOptions;
+  die: Dice = new Dice();
 
 }

@@ -6,11 +6,11 @@
         <form class="dice-settings">
             <mat-form-field id="name-field">
                 <mat-label>Name</mat-label>
-                <input matInput>
+                <input name="die-name" [(ngModel)]="die.name" matInput>
             </mat-form-field>
             <mat-form-field id="type-field">
                 <mat-label>Type</mat-label>
-                <mat-select>
+                <mat-select name="die-type" [(ngModel)]="die.type">
                     <mat-option *ngFor="let option of options" [value]="option.value">{{ option.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
