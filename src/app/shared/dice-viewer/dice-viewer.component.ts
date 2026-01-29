@@ -13,7 +13,7 @@ export class DiceViewerComponent implements AfterViewInit {
 
   @ViewChild('diceViewer') diceViewer: ElementRef<HTMLCanvasElement> | undefined;
   @Input() public dice: Dice[] = [];
-  private diceRendererService = inject(DiceRendererService);
+  public diceRendererService = inject(DiceRendererService);
   private toastService = inject(ToastService);
 
   ngOnChanges(): void {

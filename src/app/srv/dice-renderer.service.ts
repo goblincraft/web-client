@@ -29,6 +29,18 @@ export class DiceRendererService {
     }
   }
 
+  public zoomIn(): void {
+    if (this.camera) {
+      this.camera.radius -= 1;
+    }
+  }
+
+  public zoomOut(): void {
+    if (this.camera) {
+      this.camera.radius += 1;
+    }
+  }
+
   public addDieToScene(die: Dice): void {
     if (!this.scene) {
       this.toastService.showErrorMessage('Scene is not initialized.');

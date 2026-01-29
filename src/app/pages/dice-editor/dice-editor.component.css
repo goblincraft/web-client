@@ -22,3 +22,7 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.dice-control {
+    margin-left: 10px;
+}

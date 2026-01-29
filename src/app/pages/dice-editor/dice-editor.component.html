@@ -16,10 +16,12 @@
             </mat-form-field>
         </form>
         <div class="dice-viewer-container">
-            <app-dice-viewer [dice]="loadedDie"></app-dice-viewer>
+            <app-dice-viewer [dice]="loadedDie" #diceViewer></app-dice-viewer>
         </div>
         <div class="dice-controls">
-            <button matButton="filled" color="primary"><mat-icon>play_arrow</mat-icon> Roll</button>
+            <button class="dice-control" (click)="diceViewer.diceRendererService.zoomIn()"><mat-icon>zoom_in</mat-icon></button>
+            <button class="dice-control" (click)="diceViewer.diceRendererService.zoomOut()"><mat-icon>zoom_out</mat-icon></button>
+            <button class="dice-control" matButton="filled" color="primary"><mat-icon>play_arrow</mat-icon> Roll</button>
         </div>
     </mat-card-content>
     <mat-card-actions class="page-actions">
