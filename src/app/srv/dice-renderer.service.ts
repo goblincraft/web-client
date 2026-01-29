@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import * as BABYLON from '@babylonjs/core';
+import HavokPhysics from "@babylonjs/havok";
 import { ToastService } from './toast.service';
 import { Dice } from '../cls/dice';
 
@@ -13,19 +14,64 @@ export class DiceRendererService {
   private camera: BABYLON.ArcRotateCamera | null = null;
   private light: BABYLON.HemisphericLight | null = null;
   private ground: BABYLON.Mesh | null = null;
+  private groundBody: BABYLON.PhysicsBody | null = null;
+  private dieBodies: BABYLON.PhysicsBody[] = [];
   private diceObjects: BABYLON.Mesh[] = [];
   private selectedDie: BABYLON.Mesh | null = null;
   private isDragging: boolean = false;
   private lastPointerX: number = 0;
   private lastPointerY: number = 0;
-  private canvas: HTMLCanvasElement | null = null; 
+  private canvas: HTMLCanvasElement | null = null;
+  private havokInstance: any = null; 
+  private havokPlugin: BABYLON.HavokPlugin | null = null;
   private toastService = inject(ToastService);
+
+  private async setHavokPhysicsEngine(): Promise<void> {
+    this.havokInstance = await HavokPhysics(
+      {
+        locateFile: (file) => {
+          return `https://preview.babylonjs.com/havok/${file}`;
+        }
+      }
+    );
+    this.havokPlugin = new BABYLON.HavokPlugin(true, this.havokInstance);
+    if (this.scene && this.havokPlugin) {
+      this.scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), this.havokPlugin);
+      const groundShape = new BABYLON.PhysicsShapeBox(
+        new BABYLON.Vector3(0, 0, 0), // center
+        new BABYLON.Quaternion(0, 0, 0, 1), // rotation
+        new BABYLON.Vector3(10, 0.1, 10), // extents
+        this.scene
+      );
+      this.groundBody = new BABYLON.PhysicsBody(this.ground!, BABYLON.PhysicsMotionType.STATIC, false, this.scene);
+      this.groundBody.shape = groundShape;
+      this.diceObjects.forEach((dieMesh) => {
+        const dieShape = new BABYLON.PhysicsShapeMesh(
+          dieMesh,
+          this.scene!
+        );
+        const dieBody = new BABYLON.PhysicsBody(dieMesh, BABYLON.PhysicsMotionType.DYNAMIC, false, this.scene!);
+        dieBody.shape = dieShape;
+        dieBody.setMassProperties({ mass: 1 })
+        this.dieBodies.push(dieBody);
+      });
+    }
+  }
 
   public renderScene(): void {
     if (this.engine && this.scene) {
       this.engine.runRenderLoop(() => {
         this.scene!.render();
       });
+    }
+  }
+
+  public async roll(): Promise<void> {
+    this.diceObjects.forEach((dieMesh) => {
+      dieMesh.position.set(0, 5, 0);
+    });
+    if (!this.havokInstance) {
+      await this.setHavokPhysicsEngine();
     }
   }
 

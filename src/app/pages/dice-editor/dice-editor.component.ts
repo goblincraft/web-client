@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -28,9 +28,14 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class DiceEditorComponent {
 
+  @ViewChild('diceViewer') diceViewer!: DiceViewerComponent;
   options: IDiceOption[] = DiceOptions;
   die: Dice = new Dice();
   loadedDie: Dice[] = [this.die];
+
+  async rollDie(): Promise<void> {
+    await this.diceViewer.diceRendererService.roll();
+  }
 
   updateDie(): void {
     this.loadedDie = [this.die];
