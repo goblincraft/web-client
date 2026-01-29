@@ -14,6 +14,10 @@ export class DiceRendererService {
   private light: BABYLON.HemisphericLight | null = null;
   private ground: BABYLON.Mesh | null = null;
   private diceObjects: BABYLON.Mesh[] = [];
+  private selectedDie: BABYLON.Mesh | null = null;
+  private isDragging: boolean = false;
+  private lastPointerX: number = 0;
+  private lastPointerY: number = 0;
   private canvas: HTMLCanvasElement | null = null; 
   private toastService = inject(ToastService);
 
@@ -51,6 +55,7 @@ export class DiceRendererService {
           this.toastService.showErrorMessage('Unsupported die shape.');
           return;
       }
+      dieMesh.position = new BABYLON.Vector3(0, 1, 0);
       this.diceObjects.push(dieMesh);
     }
   }
@@ -63,6 +68,39 @@ export class DiceRendererService {
       this.diceObjects = [];
     }
   }
+
+  public listenForClickAndRotate(): void {
+    if (this.canvas && this.scene) {
+      this.scene.onPointerObservable.add((pointerInfo) => {
+        switch (pointerInfo.type) {
+          case BABYLON.PointerEventTypes.POINTERDOWN:
+            const pickResult = this.scene!.pick(this.scene!.pointerX, this.scene!.pointerY);
+            if (pickResult && pickResult.hit && pickResult.pickedMesh && this.diceObjects.includes(pickResult.pickedMesh as BABYLON.Mesh)) {
+              this.selectedDie = pickResult.pickedMesh as BABYLON.Mesh;
+              this.lastPointerX = this.scene!.pointerX;
+              this.lastPointerY = this.scene!.pointerY;
+              this.isDragging = true;
+            }
+            
+            break;
+          case BABYLON.PointerEventTypes.POINTERUP:
+            this.selectedDie = null;
+            this.isDragging = false;
+            break;
+          case BABYLON.PointerEventTypes.POINTERMOVE:
+            if (this.selectedDie && this.isDragging) {
+              const deltaX = this.scene!.pointerX - this.lastPointerX;
+              const deltaY = this.scene!.pointerY - this.lastPointerY;
+              this.selectedDie.rotation.y += deltaX * 0.01;
+              this.selectedDie.rotation.x += deltaY * 0.01;
+              this.lastPointerX = this.scene!.pointerX;
+              this.lastPointerY = this.scene!.pointerY;
+            }
+            break;
+        }
+      });
+    }
+  }
   
   public createScene(canvas: HTMLCanvasElement): boolean {
     try {
@@ -71,7 +109,7 @@ export class DiceRendererService {
       this.scene = new BABYLON.Scene(this.engine);
       this.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, 0, 10, new BABYLON.Vector3(0, 0, 0), this.scene);
       this.light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this.scene);
-      this.light.intensity = 0.7;
+      this.light.intensity = 0.5;
       this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 10, height: 10 }, this.scene);
       return true;
     } catch (error) {
