@@ -8,6 +8,7 @@ import { Dice, DiceOptions, IDiceOption } from '../../cls/dice';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceViewerComponent } from '../../shared/dice-viewer/dice-viewer.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dice-editor',
@@ -18,6 +19,7 @@ import { DiceViewerComponent } from '../../shared/dice-viewer/dice-viewer.compon
     MatSelectModule,
     MatCardModule,
     MatButtonModule,
+    MatIconModule,
     MatFormFieldModule,
     DiceViewerComponent
   ],
