@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { DiceRendererService } from '../../srv/dice-renderer.service';
+import { ToastService } from '../../srv/toast.service';
 
 @Component({
   selector: 'app-dice-viewer',
@@ -6,6 +8,19 @@ import { Component } from '@angular/core';
   templateUrl: './dice-viewer.component.html',
   styleUrl: './dice-viewer.component.css',
 })
-export class DiceViewerComponent {
+export class DiceViewerComponent implements OnInit {
+
+  @ViewChild('diceViewer') diceViewer: ElementRef<HTMLCanvasElement> | undefined;
+  private diceRendererService = inject(DiceRendererService);
+  private toastService = inject(ToastService);
+  
+  ngOnInit(): void {
+    if (this.diceViewer) {
+      this.diceRendererService.createScene(this.diceViewer.nativeElement);
+      this.diceRendererService.renderScene();
+    } else {
+      this.toastService.showErrorMessage('Dice viewer not found.');
+    }
+  }
 
 }
