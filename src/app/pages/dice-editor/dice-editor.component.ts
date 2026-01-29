@@ -28,5 +28,10 @@ export class DiceEditorComponent {
 
   options: IDiceOption[] = DiceOptions;
   die: Dice = new Dice();
+  loadedDie: Dice[] = [this.die];
+
+  updateDie(): void {
+    this.loadedDie = [this.die];
+  }
 
 }

@@ -10,13 +10,13 @@
             </mat-form-field>
             <mat-form-field id="type-field">
                 <mat-label>Type</mat-label>
-                <mat-select name="die-type" [(ngModel)]="die.type">
+                <mat-select name="die-type" [(ngModel)]="die.type" (ngModelChange)="updateDie()">
                     <mat-option *ngFor="let option of options" [value]="option.value">{{ option.label }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </form>
         <div class="dice-viewer-container">
-            <app-dice-viewer [dice]="[die]"></app-dice-viewer>
+            <app-dice-viewer [dice]="loadedDie"></app-dice-viewer>
         </div>
     </mat-card-content>
     <mat-card-actions class="page-actions">
