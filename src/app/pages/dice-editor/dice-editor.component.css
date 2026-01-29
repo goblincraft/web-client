@@ -12,3 +12,7 @@
 #type-field {
     width: 35%;
 }
+
+.dice-viewer-container {
+    height: 40vh;
+}
