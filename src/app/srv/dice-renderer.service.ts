@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import * as BABYLON from '@babylonjs/core';
 import { ToastService } from './toast.service';
+import { Dice } from '../cls/dice';
 
 @Injectable({
   providedIn: 'root',
@@ -11,18 +12,58 @@ export class DiceRendererService {
   private scene: BABYLON.Scene | null = null;
   private camera: BABYLON.ArcRotateCamera | null = null;
   private light: BABYLON.HemisphericLight | null = null;
+  private diceObjects: BABYLON.Mesh[] = [];
   private canvas: HTMLCanvasElement | null = null; 
   private toastService = inject(ToastService);
 
-  renderScene(): void {
+  public renderScene(): void {
     if (this.engine && this.scene) {
       this.engine.runRenderLoop(() => {
         this.scene!.render();
       });
     }
   }
+
+  public addDieToScene(die: Dice): void {
+    if (!this.scene) {
+      this.toastService.showErrorMessage('Scene is not initialized.');
+      return;
+    } else {
+      let dieMesh: BABYLON.Mesh;
+      switch (die.type.object) {
+        case 0: // Tetrahedron
+          dieMesh = BABYLON.MeshBuilder.CreatePolyhedron(die.name, { type: 0, size: 1 }, this.scene);
+          break;
+        case 1: // Octahedron
+          dieMesh = BABYLON.MeshBuilder.CreatePolyhedron(die.name, { type: 1, size: 1 }, this.scene);
+          break;
+        case 2: // Dodecahedron
+          dieMesh = BABYLON.MeshBuilder.CreatePolyhedron(die.name, { type: 2, size: 1 }, this.scene);
+          break;
+        case 3: // Icosahedron
+          dieMesh = BABYLON.MeshBuilder.CreatePolyhedron(die.name, { type: 3, size: 1 }, this.scene);
+          break;
+        case 15: // Cube
+          dieMesh = BABYLON.MeshBuilder.CreateBox(die.name, { size: 1 }, this.scene);
+          break;
+        default:
+          this.toastService.showErrorMessage('Unsupported die shape.');
+          return;
+      }
+      this.diceObjects.push(dieMesh);
+    }
+  }
+
+  public clearScene(): void {
+    if (this.diceObjects.length > 0) {
+      this.diceObjects.forEach((dieMesh) => {
+        dieMesh.dispose();
+      });
+      this.diceObjects = [];
+    }
+  }
   
-  createScene(canvas: HTMLCanvasElement): boolean {
+  public createScene(canvas: HTMLCanvasElement): boolean {
     try {
       this.canvas = canvas;
       this.engine = new BABYLON.Engine(this.canvas, true);
