@@ -12,6 +12,7 @@ export class DiceRendererService {
   private scene: BABYLON.Scene | null = null;
   private camera: BABYLON.ArcRotateCamera | null = null;
   private light: BABYLON.HemisphericLight | null = null;
+  private ground: BABYLON.Mesh | null = null;
   private diceObjects: BABYLON.Mesh[] = [];
   private canvas: HTMLCanvasElement | null = null; 
   private toastService = inject(ToastService);
@@ -68,10 +69,10 @@ export class DiceRendererService {
       this.canvas = canvas;
       this.engine = new BABYLON.Engine(this.canvas, true);
       this.scene = new BABYLON.Scene(this.engine);
-      this.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, Math.PI / 4, 10, new BABYLON.Vector3(0, 0, 0), this.scene);
-      this.camera.attachControl(this.canvas, true);
+      this.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, 0, 10, new BABYLON.Vector3(0, 0, 0), this.scene);
       this.light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this.scene);
       this.light.intensity = 0.7;
+      this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 10, height: 10 }, this.scene);
       return true;
     } catch (error) {
       this.toastService.showErrorMessage('Failed to create dice renderer scene.');
