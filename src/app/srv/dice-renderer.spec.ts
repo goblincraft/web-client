@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DiceRenderer } from './dice-renderer';
+import { DiceRendererService } from './dice-renderer.service';
 
-describe('DiceRenderer', () => {
-  let service: DiceRenderer;
+describe('DiceRendererService', () => {
+  let service: DiceRendererService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DiceRenderer);
+    service = TestBed.inject(DiceRendererService);
   });
 
   it('should be created', () => {
