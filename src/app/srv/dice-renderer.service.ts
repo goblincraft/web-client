@@ -29,6 +29,12 @@ export class DiceRendererService {
     }
   }
 
+  public resetCamera(): void {
+    if (this.camera) {
+      this.camera.radius = 10;
+    }
+  }
+
   public zoomIn(): void {
     if (this.camera) {
       this.camera.radius -= 1;
