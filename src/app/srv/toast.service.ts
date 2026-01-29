@@ -6,10 +6,16 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ToastService {
 
-  toastr = inject(ToastrService);
+  private toastr = inject(ToastrService);
+  private options = {
+    positionClass: 'toast-bottom-center',
+    timeOut: 3000,
+    closeButton: true,
+    progressBar: true
+  }
   
   showErrorMessage(message: string): void {
-    this.toastr.error(message);
+    this.toastr.error(message, 'Error', this.options);
   }
 
 }
