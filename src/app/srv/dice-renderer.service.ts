@@ -13,6 +13,14 @@ export class DiceRendererService {
   private light: BABYLON.HemisphericLight | null = null;
   private canvas: HTMLCanvasElement | null = null; 
   private toastService = inject(ToastService);
+
+  renderScene(): void {
+    if (this.engine && this.scene) {
+      this.engine.runRenderLoop(() => {
+        this.scene!.render();
+      });
+    }
+  }
   
   createScene(canvas: HTMLCanvasElement): boolean {
     try {
