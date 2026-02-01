@@ -26,11 +26,14 @@ export class DiceRendererService {
   private havokPlugin: BABYLON.HavokPlugin | null = null;
   private toastService = inject(ToastService);
 
+  //TO DO: create method to clear and reapply physics body when rolling
+
   private async setHavokPhysicsEngine(): Promise<void> {
     this.havokInstance = await HavokPhysics(
       {
         locateFile: (file) => {
-          return `https://preview.babylonjs.com/havok/${file}`;
+          console.log(file);
+          return `/assets/lib/${file}`;
         }
       }
     );
