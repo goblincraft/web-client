@@ -198,7 +198,7 @@ export class DiceRendererService {
       this.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, 0, 10, new BABYLON.Vector3(0, 0, 0), this.scene);
       this.hemisphereLight = new BABYLON.HemisphericLight('hemishphereLight', new BABYLON.Vector3(0, 1, 0), this.scene);
       this.hemisphereLight.intensity = 0.3;
-      this.pointLight = new BABYLON.PointLight('pointLight', new BABYLON.Vector3(2, 10, 2), this.scene);
+      this.pointLight = new BABYLON.PointLight('pointLight', new BABYLON.Vector3(5, 10, 5), this.scene);
       this.pointLight.intensity = 0.5;
       this.shadowGenerator = new BABYLON.ShadowGenerator(1024, this.pointLight);
       this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 10, height: 10 }, this.scene);
