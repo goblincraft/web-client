@@ -42,7 +42,6 @@ export class DiceRendererService {
 
   private resetDiePhysics(): void {
     this.diceObjects.forEach((dieMesh) => {
-      dieMesh.position.set(0, 0, 0);
       dieMesh.rotation.set(0, 0, 0);
       if (dieMesh.physicsBody) {
         dieMesh.physicsBody.dispose();     
@@ -70,7 +69,6 @@ export class DiceRendererService {
       );
       this.groundBody = new BABYLON.PhysicsBody(this.ground!, BABYLON.PhysicsMotionType.STATIC, false, this.scene);
       this.groundBody.shape = groundShape;
-      this.setDiePhysics();
     }
   }
 
@@ -82,16 +80,18 @@ export class DiceRendererService {
     }
   }
 
-  public async roll(): Promise<void> {
+  public roll(): void {
+    this.resetDiePhysics();
     this.diceObjects.forEach((dieMesh) => {
       dieMesh.position.set(0, 5, 0);
     });
-    if (!this.havokInstance) {
-      await this.setHavokPhysicsEngine();
-    } else {
-      this.resetDiePhysics();
-      this.setDiePhysics();
-    }
+    this.setDiePhysics();
+    // if (!this.havokInstance) {
+    //   await this.setHavokPhysicsEngine();
+    // } else {
+    //   this.resetDiePhysics();
+    //   this.setDiePhysics();
+    // }
   }
 
   public resetCamera(): void {
@@ -138,11 +138,14 @@ export class DiceRendererService {
           this.toastService.showErrorMessage('Unsupported die shape.');
           return;
       }
-      dieMesh.position = new BABYLON.Vector3(0, 0, 0);
-      dieMesh.rotation = new BABYLON.Vector3(0, 0, 0);
       this.shadowGenerator?.addShadowCaster(dieMesh);
       this.diceObjects.push(dieMesh);
-    }
+    };
+    this.resetDiePhysics();
+    this.diceObjects.forEach((dieMesh) => {
+        dieMesh.position.set(0, 5, 0);
+      });
+    this.setDiePhysics();
   }
 
   public clearScene(): void {
@@ -187,7 +190,7 @@ export class DiceRendererService {
     }
   }
   
-  public createScene(canvas: HTMLCanvasElement): boolean {
+  public async createScene(canvas: HTMLCanvasElement): Promise<boolean> {
     try {
       this.canvas = canvas;
       this.engine = new BABYLON.Engine(this.canvas, true);
@@ -201,6 +204,7 @@ export class DiceRendererService {
       this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 10, height: 10 }, this.scene);
       this.ground.receiveShadows = true;
       this.camera.attachControl(this.canvas, true);
+      await this.setHavokPhysicsEngine();
       return true;
     } catch (error) {
       this.toastService.showErrorMessage('Failed to create dice renderer scene.');

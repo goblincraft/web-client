@@ -29,12 +29,14 @@ export class DiceViewerComponent implements AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
     if (this.diceViewer) {
-      this.diceRendererService.createScene(this.diceViewer.nativeElement);
-      this.loadDie();
-      this.diceRendererService.listenForClickAndRotate();
-      this.diceRendererService.renderScene();
+      const success = await this.diceRendererService.createScene(this.diceViewer.nativeElement);
+      if (success) {
+        this.loadDie();
+        this.diceRendererService.listenForClickAndRotate();
+        this.diceRendererService.renderScene();
+      }
     } else {
       this.toastService.showErrorMessage('Dice viewer not found.');
     }
