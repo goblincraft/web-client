@@ -12,10 +12,11 @@ export class DiceRendererService {
   private engine: BABYLON.Engine | null = null;
   private scene: BABYLON.Scene | null = null;
   private camera: BABYLON.ArcRotateCamera | null = null;
-  private light: BABYLON.HemisphericLight | null = null;
+  private hemisphereLight: BABYLON.HemisphericLight | null = null;
+  private pointLight: BABYLON.PointLight | null = null;
+  private shadowGenerator: BABYLON.ShadowGenerator | null = null;
   private ground: BABYLON.Mesh | null = null;
   private groundBody: BABYLON.PhysicsBody | null = null;
-  private dieBodies: BABYLON.PhysicsBody[] = [];
   private diceObjects: BABYLON.Mesh[] = [];
   private selectedDie: BABYLON.Mesh | null = null;
   private isDragging: boolean = false;
@@ -26,7 +27,28 @@ export class DiceRendererService {
   private havokPlugin: BABYLON.HavokPlugin | null = null;
   private toastService = inject(ToastService);
 
-  //TO DO: create method to clear and reapply physics body when rolling
+  
+  private setDiePhysics(): void {
+    this.diceObjects.forEach((dieMesh) => {
+      const dieShape = new BABYLON.PhysicsShapeMesh(
+        dieMesh,
+        this.scene!
+      );
+      const dieBody = new BABYLON.PhysicsBody(dieMesh, BABYLON.PhysicsMotionType.DYNAMIC, false, this.scene!);
+      dieBody.shape = dieShape;
+      dieBody.setMassProperties({ mass: 1 });
+    });
+  }
+
+  private resetDiePhysics(): void {
+    this.diceObjects.forEach((dieMesh) => {
+      dieMesh.position.set(0, 0, 0);
+      dieMesh.rotation.set(0, 0, 0);
+      if (dieMesh.physicsBody) {
+        dieMesh.physicsBody.dispose();     
+      }
+    });
+  }
 
   private async setHavokPhysicsEngine(): Promise<void> {
     this.havokInstance = await HavokPhysics(
@@ -48,16 +70,7 @@ export class DiceRendererService {
       );
       this.groundBody = new BABYLON.PhysicsBody(this.ground!, BABYLON.PhysicsMotionType.STATIC, false, this.scene);
       this.groundBody.shape = groundShape;
-      this.diceObjects.forEach((dieMesh) => {
-        const dieShape = new BABYLON.PhysicsShapeMesh(
-          dieMesh,
-          this.scene!
-        );
-        const dieBody = new BABYLON.PhysicsBody(dieMesh, BABYLON.PhysicsMotionType.DYNAMIC, false, this.scene!);
-        dieBody.shape = dieShape;
-        dieBody.setMassProperties({ mass: 1 })
-        this.dieBodies.push(dieBody);
-      });
+      this.setDiePhysics();
     }
   }
 
@@ -75,6 +88,9 @@ export class DiceRendererService {
     });
     if (!this.havokInstance) {
       await this.setHavokPhysicsEngine();
+    } else {
+      this.resetDiePhysics();
+      this.setDiePhysics();
     }
   }
 
@@ -122,7 +138,9 @@ export class DiceRendererService {
           this.toastService.showErrorMessage('Unsupported die shape.');
           return;
       }
-      dieMesh.position = new BABYLON.Vector3(0, 1, 0);
+      dieMesh.position = new BABYLON.Vector3(0, 0, 0);
+      dieMesh.rotation = new BABYLON.Vector3(0, 0, 0);
+      this.shadowGenerator?.addShadowCaster(dieMesh);
       this.diceObjects.push(dieMesh);
     }
   }
@@ -175,9 +193,14 @@ export class DiceRendererService {
       this.engine = new BABYLON.Engine(this.canvas, true);
       this.scene = new BABYLON.Scene(this.engine);
       this.camera = new BABYLON.ArcRotateCamera('camera', Math.PI / 2, 0, 10, new BABYLON.Vector3(0, 0, 0), this.scene);
-      this.light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), this.scene);
-      this.light.intensity = 0.5;
+      this.hemisphereLight = new BABYLON.HemisphericLight('hemishphereLight', new BABYLON.Vector3(0, 1, 0), this.scene);
+      this.hemisphereLight.intensity = 0.3;
+      this.pointLight = new BABYLON.PointLight('pointLight', new BABYLON.Vector3(2, 10, 2), this.scene);
+      this.pointLight.intensity = 0.5;
+      this.shadowGenerator = new BABYLON.ShadowGenerator(1024, this.pointLight);
       this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 10, height: 10 }, this.scene);
+      this.ground.receiveShadows = true;
+      this.camera.attachControl(this.canvas, true);
       return true;
     } catch (error) {
       this.toastService.showErrorMessage('Failed to create dice renderer scene.');
