@@ -34,7 +34,7 @@ export class DiceEditorComponent {
   loadedDie: Dice[] = [this.die];
 
   async rollDie(): Promise<void> {
-    await this.diceViewer.diceRendererService.roll();
+    this.diceViewer.diceRendererService.roll();
   }
 
   updateDie(): void {

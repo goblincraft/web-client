@@ -30,30 +30,40 @@ export class DiceRendererService {
   
   private setDiePhysics(): void {
     this.diceObjects.forEach((dieMesh) => {
+      //let rolling = true;
+      //const facetNormal = dieMesh.getFacetNormal(1);
+      const dieBody = new BABYLON.PhysicsBody(dieMesh, BABYLON.PhysicsMotionType.DYNAMIC, false, this.scene!);
       const dieShape = new BABYLON.PhysicsShapeMesh(
         dieMesh,
         this.scene!
       );
-      const dieBody = new BABYLON.PhysicsBody(dieMesh, BABYLON.PhysicsMotionType.DYNAMIC, false, this.scene!);
-      dieBody.shape = dieShape;
-      dieBody.setMassProperties({ mass: 1 });
+      dieBody.setCollisionEndedCallbackEnabled(true);
+      dieBody.getCollisionEndedObservable().add((event) => {
+        if (event.collidedAgainst == this.groundBody) {
+          const x = Math.random() * (4 - (-4)) + -4;
+          dieBody.applyImpulse(new BABYLON.Vector3(x, 1, 0), dieMesh.getAbsolutePosition());
+        }
+      });
+      dieMesh.physicsBody = dieBody;
+      dieMesh.physicsBody!.shape = dieShape;
+      dieMesh.physicsBody!.setMassProperties({ mass: 1 });
+      //dieBody.shape = dieShape;
+      //dieBody.setMassProperties({ mass: 1 });
     });
   }
 
-  private resetDiePhysics(): void {
-    this.diceObjects.forEach((dieMesh) => {
-      dieMesh.rotation.set(0, 0, 0);
-      if (dieMesh.physicsBody) {
-        dieMesh.physicsBody.dispose();     
-      }
-    });
-  }
+  // private resetDiePhysics(): void {
+  //   this.diceObjects.forEach((dieMesh) => {
+  //     if (dieMesh.physicsBody) {
+  //       dieMesh.physicsBody.dispose();     
+  //     }
+  //   });
+  // }
 
   private async setHavokPhysicsEngine(): Promise<void> {
     this.havokInstance = await HavokPhysics(
       {
         locateFile: (file) => {
-          console.log(file);
           return `/assets/lib/${file}`;
         }
       }
@@ -81,17 +91,17 @@ export class DiceRendererService {
   }
 
   public roll(): void {
-    this.resetDiePhysics();
+    //this.resetDiePhysics();
     this.diceObjects.forEach((dieMesh) => {
-      dieMesh.position.set(0, 5, 0);
+      if (dieMesh.physicsBody) {
+        dieMesh.physicsBody.disablePreStep = false;
+        dieMesh.position = new BABYLON.Vector3(0, 5, 0);
+        this.scene!.onAfterPhysicsObservable.addOnce(() => {
+          dieMesh.physicsBody!.disablePreStep = true;
+        });
+      }
     });
-    this.setDiePhysics();
-    // if (!this.havokInstance) {
-    //   await this.setHavokPhysicsEngine();
-    // } else {
-    //   this.resetDiePhysics();
-    //   this.setDiePhysics();
-    // }
+    //this.setDiePhysics();  
   }
 
   public resetCamera(): void {
@@ -138,14 +148,17 @@ export class DiceRendererService {
           this.toastService.showErrorMessage('Unsupported die shape.');
           return;
       }
+      dieMesh.updateFacetData();
       this.shadowGenerator?.addShadowCaster(dieMesh);
+      // console.log(dieMesh.facetNb);
+      // for (let i = 0; i < dieMesh.facetNb; i++) {
+      //   const facetCenter = dieMesh.getFacetPosition(i);
+      //   console.log(`Facet ${i} center: ${facetCenter}`); // For debugging
+      // }
       this.diceObjects.push(dieMesh);
     };
-    this.resetDiePhysics();
-    this.diceObjects.forEach((dieMesh) => {
-        dieMesh.position.set(0, 5, 0);
-      });
     this.setDiePhysics();
+    //this.roll();
   }
 
   public clearScene(): void {
