@@ -30,8 +30,6 @@ export class DiceRendererService {
   
   private setDiePhysics(): void {
     this.diceObjects.forEach((dieMesh) => {
-      //let rolling = true;
-      //const facetNormal = dieMesh.getFacetNormal(1);
       const dieBody = new BABYLON.PhysicsBody(dieMesh, BABYLON.PhysicsMotionType.DYNAMIC, false, this.scene!);
       const dieShape = new BABYLON.PhysicsShapeMesh(
         dieMesh,
@@ -47,18 +45,8 @@ export class DiceRendererService {
       dieMesh.physicsBody = dieBody;
       dieMesh.physicsBody!.shape = dieShape;
       dieMesh.physicsBody!.setMassProperties({ mass: 1 });
-      //dieBody.shape = dieShape;
-      //dieBody.setMassProperties({ mass: 1 });
     });
   }
-
-  // private resetDiePhysics(): void {
-  //   this.diceObjects.forEach((dieMesh) => {
-  //     if (dieMesh.physicsBody) {
-  //       dieMesh.physicsBody.dispose();     
-  //     }
-  //   });
-  // }
 
   private async setHavokPhysicsEngine(): Promise<void> {
     this.havokInstance = await HavokPhysics(
@@ -91,7 +79,6 @@ export class DiceRendererService {
   }
 
   public roll(): void {
-    //this.resetDiePhysics();
     this.diceObjects.forEach((dieMesh) => {
       if (dieMesh.physicsBody) {
         dieMesh.physicsBody.disablePreStep = false;
@@ -101,7 +88,6 @@ export class DiceRendererService {
         });
       }
     });
-    //this.setDiePhysics();  
   }
 
   public resetCamera(): void {
@@ -150,15 +136,9 @@ export class DiceRendererService {
       }
       dieMesh.updateFacetData();
       this.shadowGenerator?.addShadowCaster(dieMesh);
-      // console.log(dieMesh.facetNb);
-      // for (let i = 0; i < dieMesh.facetNb; i++) {
-      //   const facetCenter = dieMesh.getFacetPosition(i);
-      //   console.log(`Facet ${i} center: ${facetCenter}`); // For debugging
-      // }
       this.diceObjects.push(dieMesh);
     };
     this.setDiePhysics();
-    //this.roll();
   }
 
   public clearScene(): void {
