@@ -41,7 +41,7 @@ export class DiceRendererService {
       dieBody.getCollisionEndedObservable().add((event) => {
         if (event.collidedAgainst == this.groundBody) {
           const x = Math.random() * (4 - (-4)) + -4;
-          dieBody.applyImpulse(new BABYLON.Vector3(x, 1, 0), dieMesh.getAbsolutePosition());
+          dieBody.applyImpulse(new BABYLON.Vector3(x, 0, 0), dieMesh.getAbsolutePosition());
         }
       });
       dieMesh.physicsBody = dieBody;
@@ -202,6 +202,12 @@ export class DiceRendererService {
       });
     }
   }
+
+  public resizeScene(): void {
+    if (this.engine) {
+      this.engine.resize();
+    }
+  }
   
   public async createScene(canvas: HTMLCanvasElement): Promise<boolean> {
     try {
@@ -214,7 +220,7 @@ export class DiceRendererService {
       this.pointLight = new BABYLON.PointLight('pointLight', new BABYLON.Vector3(5, 10, 5), this.scene);
       this.pointLight.intensity = 0.5;
       this.shadowGenerator = new BABYLON.ShadowGenerator(1024, this.pointLight);
-      this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 10, height: 10 }, this.scene);
+      this.ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 30, height: 25 }, this.scene);
       this.ground.receiveShadows = true;
       this.camera.attachControl(this.canvas, true);
       await this.setHavokPhysicsEngine();

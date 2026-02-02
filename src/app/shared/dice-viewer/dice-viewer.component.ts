@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, SimpleChange, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, inject, Input, SimpleChange, ViewChild } from '@angular/core';
 import { DiceRendererService } from '../../srv/dice-renderer.service';
 import { ToastService } from '../../srv/toast.service';
 import { Dice } from '../../cls/dice';
@@ -27,6 +27,11 @@ export class DiceViewerComponent implements AfterViewInit {
         this.diceRendererService.addDieToScene(die);
       });
     }
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.diceRendererService.resizeScene();
   }
 
   async ngAfterViewInit(): Promise<void> {
